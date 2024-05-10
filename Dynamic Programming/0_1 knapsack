@@ -1,23 +1,29 @@
 #include<iostream>
 #include<string>
+#include<vector>
 #define optimize ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
 using namespace std;
-//recursive way
-int max_profit(int weight[],int val[],int w,int n){
+//recursive way+memoization
+//just remove dp vector to make it only recursive.
+int max_profit(int weight[],int val[],int w,int n,vector<vector<int>>&dp){
 //BAse condition
 if(n==0||w==0){
     return 0;
 }
 //if the weight of the nth item is greater than the knapsack weight
-
+if(dp[n][w]!=-1){
+    return dp[n][w];
+}
 if(weight[n-1]>w){
-    return max_profit(weight,val,w,n-1);
+     dp[n][w]=max_profit(weight,val,w,n-1,dp);
+return dp[n][w];
 }
 //I have 2 choice if the knapsack weight is greater than the item weight
 //1. I can take the item, if take, then minus the weight and add the value
 //2. I will not take the value
 else{
-    return max(val[n-1]+max_profit(weight,val,w-weight[n-1],n-1),max_profit(weight,val,w,n-1));
+    return dp[n][w]=max(val[n-1]+max_profit(weight,val,w-weight[n-1],n-1,dp),max_profit(weight,val,w,n-1,dp));
+
 }
 }
 int main(){
@@ -33,6 +39,7 @@ for(int i=0;i<n;i++){
 cout<<"Enter the weight of knapsack"<<endl;
 int w;
 cin>>w;
-int res=max_profit(weight,val,w,n);
+vector<vector<int>>dp(n+1,vector<int>(w+1,-1));
+int res=max_profit(weight,val,w,n,dp);
 cout<<res<<endl;
 }
