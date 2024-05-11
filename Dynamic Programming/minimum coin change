@@ -1,0 +1,50 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<limits>
+#define optimize ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+using namespace std;
+//recursive+memoization approach
+int minimum(int arr[],int target,int index,vector<vector<int>>&dp){
+if(index==0){
+    if(target%arr[0]==0){
+        return target/arr[0];
+    }
+    else
+        return INT_MAX-1;//u can use 1e9
+}
+if(dp[index][target]!=-1){
+    return dp[index][target];
+}
+if(target<arr[index]){
+     dp[index][target]=minimum(arr,target,index-1,dp);
+return dp[index][target];
+}
+else{
+   return dp[index][target]=min((1+minimum(arr,target-arr[index],index,dp)),(0+minimum(arr,target,index-1,dp)));
+}
+//strivers code
+/*int nottaken=0+minimum(arr,target,index-1,dp);
+int taken=1e9;
+if(arr[index-1]<=target){
+    taken=1+minimum(arr,target-arr[index],index,dp);
+}
+return dp[index][target]=min(taken,nottaken);
+*/
+}
+int main(){
+int n;
+cout<<"input the numbers of coins :";
+cin>>n;
+int arr[n];
+for(int i=0;i<n;i++){
+    cin>>arr[i];
+}
+cout<<"Enter the target amount: ";
+int target;
+cin>>target;
+int x_target=target;
+vector<vector<int>>dp(n+1,vector<int>(target+1,-1));
+int res=minimum(arr,target,n-1,dp);
+cout<<res<<endl;
+}
